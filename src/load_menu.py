@@ -1,29 +1,46 @@
-from flask import Flask, request, send_file
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import os
 
-app = Flask(__name__)
 
-# Маршрут для GET-запросов — возвращает страницу «Контакты»
-@app.route('/', methods=['GET'])
-def get_contacts():
-    # Читаем содержимое HTML-файла
-    with open('contacts.html', 'r', encoding='utf-8') as file:
-        html_content = file.read()
-    
-    # Устанавливаем тип контента text/html (вместо application/json)
-    return html_content, 200, {'Content-Type': 'text/html'}
+class MyHandler(BaseHTTPRequestHandler):
+    def do_GET(self):
+         # Определяем путь к файлу на основе URL
+        if self.path == '/':
+            html_file_path = 'index.html'
+        elif self.path == '/catalog':
+            html_file_path = 'catalog.html'
+        elif self.path == '/categories':
+            html_file_path = 'categories.html'
+        elif self.path == '/contacts':
+            html_file_path = 'contacts.html'
+        elif self.path == '/main':
+            html_file_path = 'main.html'
+        elif self.path == '/menu':
+            html_file_path = 'menu.html'
+        else:
+            html_file_path = '404.html'  # страница ошибки
+        
+        try:
+            # Открываем файл в режиме чтения текста (encoding='utf-8')
+            with open(html_file_path, 'r', encoding='utf-8') as file:
+                content = file.read()  # Читаем содержимое файла в строку
+            
+            # Отправляем ответ клиенту
+            self.send_response(200)  # OK
+            self.send_header('Content-type', 'text/html')  # Указываем тип контента
+            self.end_headers()
+            self.wfile.write(content.encode('utf-8'))  # Отправляем HTML-код (преобразуем в байты)
+            
+        except FileNotFoundError:
+            # Если файл не найден — отправляем ошибку 404
+            self.send_error(404, 'File not found')
 
-# Маршрут для POST-запросов (дополнительное задание)
-@app.route('/', methods=['POST'])
-def handle_post():
-    # Получаем данные, отправленные пользователем
-    data = request.form  # Для данных из формы
-    json_data = request.get_json()  # Для JSON-данных
+# Настройки сервера
+host_name = 'localhost'
+server_port = 8000
 
-    # Печатаем данные в консоль
-    print("Данные из формы:", dict(data))
-    print("JSON-данные:", json_data)
+# Создаём и запускаем сервер
+web_server = HTTPServer((host_name, server_port), MyHandler)
+print(f'Сервер запущен: http://{host_name}:{server_port}')
+web_server.serve_forever()
 
-    return 'Данные получены!', 200
-
-if __name__ == '__main__':
-    app.run(debug=True)
