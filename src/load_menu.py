@@ -6,16 +6,16 @@ class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
          # Определяем путь к файлу на основе URL
         if self.path == '/':
-            html_file_path = 'index.html'
-        elif self.path == 'templates/catalog.html':
-            html_file_path = 'catalog.html'
-        elif self.path == 'templates/categories':
-            html_file_path = 'categories.html'
-        elif self.path == 'templates/contacts':
-            html_file_path = 'contacts.html'
-        elif self.path == 'templates/main':
-            html_file_path = 'main.html'
-        elif self.path == 'templates/menu':
+            html_file_path = 'templates/index.html'
+        elif self.path == '/catalog.html':
+            html_file_path = 'templates/catalog.html'
+        elif self.path == '/categories':
+            html_file_path = 'templates/categories.html'
+        elif self.path == '/contacts':
+            html_file_path = 'templates/contacts.html'
+        elif self.path == '/main':
+            html_file_path = 'templates/main.html'
+        elif self.path == '/menu':
             html_file_path = 'menu.html'
         else:
             html_file_path = '404.html'  # страница ошибки
