@@ -5,9 +5,9 @@ import os
 class MyHandler(BaseHTTPRequestHandler):
     def do_GET(self):
          # Определяем путь к файлу на основе URL
-        if self.path == '/catalog':
+        if self.path == '/':
             html_file_path = 'templates/index.html'
-        elif self.path == '/catalog':
+        elif self.path == '/catalog.html':
             html_file_path = 'templates/catalog.html'
         elif self.path == '/categories':
             html_file_path = 'templates/categories.html'
